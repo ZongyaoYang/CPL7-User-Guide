@@ -21,7 +21,6 @@
                             <td><a href="x91.html">Next</a></td>
                         </tr>
                     </table>
-                    <hr>
                 </div>
 
                 <div>
@@ -172,51 +171,44 @@ The loop returns.
 
                             <p>
                                 In the current implementation, the coupling period must be identical for the atmosphere,
-                                sea ice, and land components.
-                                The ocean coupling period may be the same or longer.
-                                All coupling periods must be integer multiples of the shortest period and should evenly
-                                divide a full day.
+                                sea ice, and land components. The ocean coupling period can be the same or greater. All
+                                coupling periods must be multiple integers of the smallest coupling period and should
+                                evenly divide a day of time.
                             </p>
 
                             <p>
-                                These coupling periods are defined in the driver namelist for each component using
-                                variables such as <code>atm_cpl_dt</code> and <code>atm_cpl_offset</code>.
-                                These values are specified in seconds.
-                                The coupler template file calculates these values from CCSM4 script variables like
-                                <code>ATM_NCPL</code>, which indicates coupling frequency per day.
-                                The <code>*_cpl_dt</code> sets the duration of the coupling period in seconds, while
-                                <code>*_cpl_offset</code> defines the temporal offset from the model's initial time.
+                                The coupling periods are set in the driver namelist for each component via variables
+                                called something like <code>atm_cpl_dt</code> and <code>atm_cpl_offset</code>. The units
+                                of these inputs are seconds. The coupler template file derives these values from CCSM4
+                                script variable names like <code>ATM_NCPL</code> which is the coupling frequency per
+                                day. The <code>*_cpl_dt</code> input specifies the coupling period in seconds and the
+                                <code>*_cpl_offset</code> input specifies the temporal offset of the coupling time
+                                relative to initial time. An example of an offset might be a component that couples
+                                every six hours. That would normally be on the 6th, 12th, 18th, and 24th hour of every
+                                day. An offset of 3600 seconds would change the coupling to the 1st, 7th, 13th, and 19th
+                                hour of every day. The offsets cannot be larger than the coupling period and the sign of
+                                the offsets is such that a positive offset shifts the alarm time forward by that number
+                                of seconds. The offsets are of limited use right now because of the limitations of the
+                                relative coupling frequencies.
                             </p>
 
                             <p>
-                                For example, a component coupling every 6 hours (i.e., at the 6th, 12th, 18th, and 24th
-                                hour) could use an offset of 3600 seconds to instead couple at the 1st, 7th, 13th, and
-                                19th hour.
-                                Offsets must be smaller than the period itself.
-                                A positive offset shifts the alarm time forward by that many seconds.
-                                Currently, offset usage is limited due to restrictions in relative coupling frequencies.
+                                Offsets play an important role in supporting concurrency. There is an offset of the
+                                smallest coupling period automatically introduced in every coupling run alarm for each
+                                component clock. This is only mentioned because it is an important but subtle point of
+                                the implementation and changing the coupling offset could have an impact on concurrency
+                                performance. Without this explicit automatic offset, the component run alarms would
+                                trigger at the end of the coupling period. This is fine for components that are running
+                                at the shortest coupling period, but will limit the ability of models to run
+                                concurrently for models that couple at longer periods. What is really required for
+                                concurrency is that the run alarm be triggered as early as possible and that the data
+                                not be copied from that component to the coupler pes until the coupling period has
+                                ended. The detailed implementation of this feature is documented in the
+                                <code>seq_timemgr_mod.F90</code> file and the impact of it for the ocean coupling is
+                                implemented in the <code>ccsm_driver.F90</code> code via use of the
+                                <code>ocnrun_alarm</code> and <code>ocnnext_alarm</code> variables.
                             </p>
 
-                            <p>
-                                Offsets are important for enabling concurrency.
-                                An automatic offset equal to the shortest coupling period is applied to each component's
-                                coupling run alarm.
-                                This subtle detail helps improve concurrency, especially when components use different
-                                coupling frequencies.
-                            </p>
-
-                            <p>
-                                Without this automatic offset, component run alarms would trigger only at the end of
-                                their coupling periods, limiting concurrent execution.
-                                To achieve better concurrency, the run alarm must be triggered as early as possible,
-                                while delaying the transfer of data to the coupler until the period ends.
-                            </p>
-
-                            <p>
-                                This behavior is implemented in the file <code>seq_timemgr_mod.F90</code>.
-                                Its effect on ocean coupling is handled in <code>ccsm_driver.F90</code> through the
-                                variables <code>ocnrun_alarm</code> and <code>ocnnext_alarm</code>.
-                            </p>
                         </div>
 
 
