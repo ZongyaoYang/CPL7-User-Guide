@@ -16,11 +16,8 @@
                 <div>
                     <table>
                         <tr>
-                            <th colspan="3">CPL7 User's Guide</th>
-                        </tr>
-                        <tr>
                             <td><a href="c17.html">Prev</a></td>
-                            <td>Chapter 2. CPL7 User Guide</td>
+                            <td><a href="index.html">Home</a></td>
                             <td><a href="c63.html">Next</a></td>
                         </tr>
                     </table>
@@ -111,6 +108,21 @@
                         <img src="figx1.jpg">
                         <p>Figure 1: Maximum potential processor concurrency designed into CCSM4 to support scientific
                             requirements and stability.</p>
+                        <p>Relative to CCSM3, there is a loss of concurrency in CCSM4 because they are coupled in
+                            fundamentally different ways. In CCSM4, the model run methods are called from the driver and
+                            the coupling from the overall system perspective looks like "send to component, run
+                            component, receive from component". In CCSM3, the coupling was done via calls inside each
+                            component and the data send and receive could be interleaved with work such that the model
+                            run method appeared to have two phases, one between the coupling send and receive, the other
+                            between the receive and send. That allowed greater concurrency in CCSM3, but was designed
+                            for concurrent-only coupling. In CCSM4, we chose not to implement multiple run phases in
+                            order to simplify the model and provide an opportunity for greater interoperability. This
+                            choice was made with the full understanding that there would be some potential loss of model
+                            concurrency in specific cases. Designers felt the additional flexibility of allowing models
+                            to run in a mixed sequential/concurrent system would likely overcome any performance
+                            degradation associated with a loss of concurrency.
+
+                        </p>
                     </div>
 
                     <h2 id="design_interfaces">Component Interfaces</h2>
@@ -143,10 +155,82 @@
                         the run length for the model. These interfaces follow the ESMF design principles.
                     </p>
                     <h2 id="design_mct">MCT, The Model Coupling Toolkit</h2>
-                    <p>MCT was a critical piece of software in the CCSM3 cpl6 coupler...</p>
+                    <p>MCT was a critical piece of software in the CCSM3 cpl6 coupler. In the updated CCSM4 cpl7
+                        coupler, the MCT attribute_vector, global_segmap, and general_grid datatypes have been adopted
+                        at the highest levels of the driver, and they are used directly in the component init, run, and
+                        finalize interfaces. In addition, MCT is used for all data rearranging and mapping
+                        (interpolation). The clock used by CCSM4 at the driver level is based on the ESMF specification.
+                        Mapping weights are still generated off-line using the SCRIP package as a preprocessing step.
+                        They are read into CCSM4 using a subroutine that reads and distributes the mapping weights in
+                        reasonably small chunks to minimize the memory footprint. Development of the CCSM4 cpl7 coupler
+                        not only relies on MCT, but MCT developers contributed significantly to the design and
+                        implementation of the cpl7 driver. Development of both the cpl6 and cpl7 coupler has resulted
+                        from a particularly strong and close collaboration between NCAR and the Department of Energy
+                        Argonne National Lab.</p>
 
                     <h2 id="design_perf">Memory, Parallel IO, and Performance</h2>
-                    <p>CCSM4 is targeting much higher resolutions than any previous CCSM coupled model...</p>
+                    <p>CCSM4 is targeting much higher resolutions than any previous CCSM coupled model. In order to
+                        facilitate scientific climate model exploration and development at these scales, the technology
+                        had to be put in place first to enable testing of this case. Efforts have been made to reduce
+                        the memory footprint and improve memory scaling in all components with a target of being able to
+                        run the fully coupled system at one tenth (0.1) degree resolution globally on tens-of-thousands
+                        of processors with each processor having as little as 512 Mb of memory. This target limits the
+                        number of global arrays that can be allocated on any processor to just a few, at most, at any
+                        time. The memory limitations have imposed new constraints on component model initialization, and
+                        significant refactoring has been required in some models' initialitialization to reduce the
+                        amount of global memory used. In addition, all components have implemented I/O that supports
+                        reading and writing of only one (1) global horizontal array at a time through a master
+                        processor.</p>
+                    <p>
+                        Development of PIO, a parallel I/O library based on netcdf, pnetcdf, and MPI-IO is well underway
+                        within the CCSM community to improve I/O performance and memory usage in the model. Most model
+                        components are currently using the pio software for I/O, and use of PIO has allowed testing of
+                        CCSM4 at high resolutions that were previously memory limited.
+                    </p>
+
+                    <p>
+                        Scaling to tens-of-thousands of processors requires reasonable performance scaling of the
+                        models, and all components have worked at improving scaling via changes to algorithms,
+                        infrastructure, or decompositions. In particular, decompositions using shared memory blocking,
+                        space filling curves, and all three spatial dimensions have been implemented to varying degrees
+                        in all components to increase parallelization and improve scalability.
+                    </p>
+
+                    <p>
+                        In practice, CCSM4 performance, load balance, and scalability are limited as a result of the
+                        size, complexity, and multiple model character of the system. Within the system, each component
+                        has its own scaling characteristics. In particular, each has processor count "sweet-spots" where
+                        the individual component model performs particularly well. This might occur within a component
+                        because of internal load balance, decomposition capabilities, communication patterns, or cache
+                        usage. Second, component performance can vary over the length of the model run. This occurs
+                        because of seasonal variability of the cost of physics in models, changes in performance during
+                        an adjustment (spin-up) phase, and temporal variability in calling certain model operations like
+                        radiation, dynamics, or I/O. Third, the hardware or batch queueing system might have some
+                        constraints on the total number of processors that are available. For instance, on 16 or 32 way
+                        shared memory node, a user is typically charged based on node usage, not processor usage. So
+                        there is no cost savings running on 40 processors versus 64 processors on a 32-way node system.
+                        As a result of all of these issues, load-balancing CCSM4 perfectly is generally not possible.
+                        But to a large degree, if one accepts the limitations, a load balance configuration with
+                        acceptable idle-time and reasonably good throughput is nearly always possible to configure.
+                        CCSM4 has significantly increased the flexibility of the possible processor layouts, and this
+                        has resulted in better load balance configurations in general.
+                    </p>
+
+                    <p>
+                        Load-balancing CCSM4 requires a number of considerations such as which components are run, their
+                        absolute resolution, and their relative resolution; cost, scaling and processor count
+                        sweet-spots for each component; and internal load imbalance within a component. It is often best
+                        to load balance the system with all significant run-time I/O turned off because this occurs very
+                        infrequently (typically one timestep per month in CCSM4), is best treated as a separate cost,
+                        and can bias interpretation of the overall model load balance. Also, the use of OpenMP threading
+                        in some or all of the system is dependent on the hardware/OS support as well as whether the
+                        system supports running all MPI and mixed MPI/OpenMP on overlapping processors for different
+                        components. Finally, should the components run sequentially, concurrently, or some combination
+                        of the two. Typically, a series of short test runs is done with the desired production
+                        configuration to establish a reasonable load balance setup for the production job. CCSM4
+                        provides some post-run analysis of the performance and load balance of the system to assist
+                        users in improving the processor layouts.
+                    </p>
 
                 </div>
 
@@ -154,13 +238,8 @@
                     <table>
                         <tr>
                             <td><a href="c17.html">Prev</a></td>
-                            <td><a href="book1.html">Home</a></td>
+                            <td><a href="index.html">Home</a></td>
                             <td><a href="c63.html">Next</a></td>
-                        </tr>
-                        <tr>
-                            <td>CPL7 User Guide</td>
-                            <td><a href="c17.html">Up</a></td>
-                            <td>CPL7 Implementation</td>
                         </tr>
                     </table>
                 </div>
