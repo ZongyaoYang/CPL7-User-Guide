@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>CPL7 Introduction</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <div>
+                    <table>
+                        <tr>
+                            <td><a href="c11.html" accesskey="P">Prev</a></td>
+                            <td></td>
+                            <td><a href="x26.html" accesskey="N">Next</a></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div>
+                    <h1 id="CPL7_Chapter1">Chapter 2. CPL7 User Guide</h1>
+
+                    <div>
+                        <b>Table of Contents</b>
+                        <ul>
+                            <li><a href="c17.html#overview">General Overview</a></li>
+                            <li><a href="x26.html">Design Discussion</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h1 id="overview">General Overview</h1>
+                        <p>
+                            CCSM4 Driver/Coupler (Updated to drvseq3_1_20)
+                        </p>
+                        <p>
+                            The CCSM4 Version of the Community Climate System Model has some
+                            significant changes compared to previous versions. In particular,
+                            CCSM4 is NOT run via multiple executables in a concurrent-only
+                            processor layout. There is now a top level driver and components are
+                            called via standard init, run, and finalize methods. Components can be
+                            run sequentially, concurrently, or in some mixed sequential/concurrent
+                            layout on processors. A coupler component that runs on a subset of the
+                            total processors still exists in the system as part of the driver. The
+                            driver runs on all processors and the coupler functions (mapping,
+                            merging, flux calculations, and diagnostics) run on a user-defined
+                            subset of the total processors. The processor layout is specified at
+                            runtime via namelist inputs.
+                        </p>
+                        <p>
+                            While the processor layout is relatively flexible and components can
+                            be run sequentially or concurrently, the sequencing of the science in
+                            the driver is fixed and independent of the processor layout. So
+                            changing the processor layout only changes the performance of the
+                            simulation system.
+                        </p>
+                        <p>
+                            Like all components in CCSM, the driver scripting system is set up
+                            such that a component template file (models/drv/bld/cpl.template)
+                            is run by the ccsm configure script, and it generates partially
+                            resolved cpl.buildnml.csh and cpl.buildexe.csh scripts. The CCSM
+                            configure script also generates case .build, .run, and .clean_build
+                            scripts. See the CCSM user guide for more detailed information
+                            about this process. But briefly, the process is as follows:
+                        </p>
+                        <pre>
+ - run create_newcase to generate a case directory.
+ - edit env_conf.xml and env_mach_pes.xml and then run configure -case. This 
+   runs the coupler cpl.template file among other things. The configure script
+   generates the .build, .run, and .clean_build scripts and
+   the partially resolved buildnml and buildexe scripts in the
+   Buildconf directory.
+ - edit env_build.xml and run the .build script.
+ - edit env_run.xml and submit the .run script.
+    </pre>
+                    </div>
+                </div>
+
+                <div>
+                    <table>
+                        <tr>
+                            <td><a href="c11.html" accesskey="P">Prev</a></td>
+                            <td><a href="index.html" accesskey="H">Home</a></td>
+                            <td><a href="x26.html" accesskey="N">Next</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
