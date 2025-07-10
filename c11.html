@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>CPL7 Introduction</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <h1 id="CPL7_Intro">Chapter 1. CPL7 Introduction</h1>
+
+                <div>
+                    <h1 id="how_to_use">How to Use This Guide</h1>
+                    <p>
+                        This guide covers the CCSM4 top level driver implementation
+                        as well as the coupler component within the system. The driver
+                        runs on all hardware processors and basically runs the top
+                        level instructions and executes the driver time loop. The
+                        coupler is a component of the CCSM4 system that is run from
+                        within the driver. It can be run on a subset of the total processors,
+                        and carries out mapping (interpolation), merging, diagnostics,
+                        and other calculations. The name cpl7 refers to the source
+                        code associated with both the driver aspects and the coupler
+                        component aspects. cpl7 code is located in the CCSM4 source
+                        tree under models/drv/ and the main program of CCSM4 is
+                        models/drv/driver/ccsm_driver.F90.
+                    </p>
+                    <p>
+                        This document provides a general overview of the cpl7 design. Then
+                        specific implementation issues are discussed individually. Finally,
+                        there is a section summarizing all of the cpl7 namelist input. This
+                        document is written primarily to help users understand the inputs and
+                        controls within the cpl7 system, but to also provide some background
+                        about the associated implementation.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
