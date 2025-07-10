@@ -168,7 +168,6 @@ The loop returns.
                         </div>
                         <div>
                             <h2 id="implementation_time_coupling">Coupling Frequency</h2>
-
                             <p>
                                 In the current implementation, the coupling period must be identical for the atmosphere,
                                 sea ice, and land components. The ocean coupling period can be the same or greater. All
@@ -178,17 +177,17 @@ The loop returns.
 
                             <p>
                                 The coupling periods are set in the driver namelist for each component via variables
-                                called something like <code>atm_cpl_dt</code> and <code>atm_cpl_offset</code>. The units
-                                of these inputs are seconds. The coupler template file derives these values from CCSM4
-                                script variable names like <code>ATM_NCPL</code> which is the coupling frequency per
-                                day. The <code>*_cpl_dt</code> input specifies the coupling period in seconds and the
-                                <code>*_cpl_offset</code> input specifies the temporal offset of the coupling time
-                                relative to initial time. An example of an offset might be a component that couples
-                                every six hours. That would normally be on the 6th, 12th, 18th, and 24th hour of every
-                                day. An offset of 3600 seconds would change the coupling to the 1st, 7th, 13th, and 19th
-                                hour of every day. The offsets cannot be larger than the coupling period and the sign of
-                                the offsets is such that a positive offset shifts the alarm time forward by that number
-                                of seconds. The offsets are of limited use right now because of the limitations of the
+                                called something like <tt>atm_cpl_dt</tt> and <tt>atm_cpl_offset</tt>. The units of
+                                these inputs are seconds. The coupler template file derives these values from CCSM4
+                                script variable names like <tt>ATM_NCPL</tt> which is the coupling frequency per day.
+                                The <tt>*_cpl_dt</tt> input specifies the coupling period in seconds and the
+                                <tt>*_cpl_offset</tt> input specifies the temporal offset of the coupling time relative
+                                to initial time. An example of an offset might be a component that couples every six
+                                hours. That would normally be on the 6th, 12th, 18th, and 24th hour of every day. An
+                                offset of 3600 seconds would change the coupling to the 1st, 7th, 13th, and 19th hour of
+                                every day. The offsets cannot be larger than the coupling period and the sign of the
+                                offsets is such that a positive offset shifts the alarm time forward by that number of
+                                seconds. The offsets are of limited use right now because of the limitations of the
                                 relative coupling frequencies.
                             </p>
 
@@ -204,9 +203,9 @@ The loop returns.
                                 concurrency is that the run alarm be triggered as early as possible and that the data
                                 not be copied from that component to the coupler pes until the coupling period has
                                 ended. The detailed implementation of this feature is documented in the
-                                <code>seq_timemgr_mod.F90</code> file and the impact of it for the ocean coupling is
-                                implemented in the <code>ccsm_driver.F90</code> code via use of the
-                                <code>ocnrun_alarm</code> and <code>ocnnext_alarm</code> variables.
+                                <tt>seq_timemgr_mod.F90</tt> file and the impact of it for the ocean coupling is
+                                implemented in the <tt>ccsm_driver.F90</tt> code via use of the <tt>ocnrun_alarm</tt>
+                                and <tt>ocnnext_alarm</tt> variables.
                             </p>
 
                         </div>
