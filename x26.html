@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>Design Discussion</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <div>
+                    <table>
+                        <tr>
+                            <th colspan="3">CPL7 User's Guide</th>
+                        </tr>
+                        <tr>
+                            <td><a href="c17.html">Prev</a></td>
+                            <td>Chapter 2. CPL7 User Guide</td>
+                            <td><a href="c63.html">Next</a></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+
+                <div>
+                    <h1 id="design">Design Discussion</h1>
+
+                    <h2 id="design_overview">Overview</h2>
+                    <p>In CCSM3/cpl6, all components ran as separate executables and there was no concept of a top-level
+                        driver.
+                        The components started independently and then communicated to the coupler at regular intervals
+                        via
+                        send and receive methods called directly from within each component. The coupler acted as a
+                        central
+                        hub coordinating data exchange, implicitly managing lags and sequencing, and executing coupler
+                        operations such as mapping (interpolation) and merging.</p>
+
+                    <p>CCSM4/cpl7 is now built as a single executable with a single high-level driver. The driver runs
+                        on all processors and handles coupler sequencing, model concurrency, and communication of data
+                        between components. The driver calls all model components via common and standard interfaces.
+                        The
+                        driver also directly calls coupler methods for mapping (interpolation), rearranging, merging, an
+                        atmosphere/ocean flux calculation, and diagnostics. In CCSM4, the model components and the
+                        coupler
+                        methods can run on subsets of all the processors. In some sense, the cpl6 sequencing and hub
+                        attributes have been migrated to the driver level while the cpl6 coupler operations like mapping
+                        and merging are being done as if a separate coupler component existed in CCSM4. In other words,
+                        cpl7 consists of a driver that controls the top level sequencing, the processor decomposition,
+                        and communication to components through subroutine calls while coupler operations such as
+                        mapping and merging are running under the driver on a subset of processors as if there were a
+                        unique coupler model component.</p>
+
+                    <p>CCSM4 consists of both data and active components models. In general, an active component both
+                        needs data from and provides data to the coupler while data models generally read data from I/O
+                        and then just provide data to the coupler. In CCSM4, like CCSM3, the atmosphere, land, and sea
+                        ice models are always tightly coupled to better resolve the diurnal cycle. This coupling is
+                        typically half-hourly, although at higher resolutions, coupling can be more frequent. The ocean
+                        model coupling is typically once or a few times per day. The diurnal cycle of ocean surface
+                        albedo is computed in the coupler for use by the atmosphere model. The looser ocean coupling
+                        frequency means the ocean forcing and response is lagged in the system. There is an option
+                        in CCSM4 to run the ocean tightly coupled without any lags, but this is normally used only when
+                        running with data ocean components.</p>
+
+                    <p>Depending on the resolution, hardware, run length and physics, a CCSM4 run can take several hours
+                        to several months of wall time to complete. Runs are typically decades or centuries long, and
+                        the
+                        model typically runs between 1 and 50 model years per wall clock day. CCSM4 has exact restart
+                        capability and the model is typically run in individual one year or multi-year chunks. CCSM4 has
+                        automatic resubmission and automatic data archiving capability.</p>
+
+                    <h2 id="design_seq">Sequencing and Concurrency</h2>
+                    <p>In CCSM4, the component processor layouts and MPI communicators are derived from namelist input.
+                        At the present time, there are seven (7) basic processor groups in CCSM. These are associated
+                        with the atmosphere, land, ocean, sea ice, land ice, coupler, and global groups, although others
+                        could be easily added later. Each of the seven processor groups can be distinct, but that is not
+                        a requirement of the system. A user can overlap processor groups relatively arbitrarily. If all
+                        processors sets overlap each other in at least one processor, then the model runs sequentially.
+                        If all processor sets are distinct, the model runs concurrently. The processor sets for each
+                        component group are described via 3 basic scalar parameters at the present time; the number of
+                        mpi tasks, the number of openmp threads per mpi task, and the global mpi task rank of the root
+                        mpi task for that group. For example, a layout where the number of mpi tasks is 8, the number of
+                        threads per mpi task is 4, and the root mpi task is 16 would create a processor group that
+                        consisted of 32 hardware processors, starting on global mpi task number 16 and it would contain
+                        8 mpi tasks. The global group would have at least 24 tasks and at least 48 hardware processors.
+                        The driver derives all MPI communicators at initialization and passes them to the component
+                        models for use.</p>
+
+                    <p>As mentioned above, there are two issues related to whether the component models run
+                        concurrently. The first is whether unique chunks of work are running on distinct processor sets.
+                        The second is the sequencing of this work in the driver. As much as possible, the CCSM4 driver
+                        sequencing has been implemented to maximize the potential amount of concurrency of work between
+                        different components. Ideally, in a single coupling step, the forcing for all models would be
+                        computed first, the models could then all run concurrently, and then the driver would advance.
+                        However, scientific requirements such as the coordination of surface albedo and atmosphere
+                        radiation computations as well as general computational stability issues in CCSM4 prevent this
+                        ideal implementation. Figure 1 shows the maximum amount of concurrency supported by the current
+                        CCSM4 driver implementation for a fully active system. In practice, the scientific constraints
+                        mean the active atmosphere model cannot run concurrently with the land and sea-ice models.
+                        Again, figure 1 does not necessarily represent the optimum processor layout for performance for
+                        any configuration, but it provides a practical limit to the amount of concurrency in the system
+                        due to scientific constraints. With CCSM4, results are bit-for-bit identical regardless of the
+                        component sequencing because the scientific lags are fixed in CCSM4 by the implementation, not
+                        the processor layout.</p>
+
+                    <div>
+                        <img src="figx1.jpg">
+                        <p>Figure 1: Maximum potential processor concurrency designed into CCSM4 to support scientific
+                            requirements and stability.</p>
+                    </div>
+
+                    <h2 id="design_interfaces">Component Interfaces</h2>
+                    <p>The standard CCSM4 component model interfaces are based upon the ESMF design. Each component
+                        provides an init, run, and finalize method with consistent arguments. The CCSM4 component
+                        interface arguments currently consist of Fortran and MCT datatypes, but an alternative ESMF
+                        version is also available. The physical coupling fields are passed through the interfaces in the
+                        init, run, and finalize phases. As part of initialization, an MPI communicator is passed from
+                        the driver to the component, and grid and decomposition information is passed from the component
+                        back to the driver. The driver/coupler acquires all information about resolution,
+                        configurations, and processor layout at run-time from either namelist or from communication with
+                        components.</p>
+                    <p>
+                        Initialization of the system in CCSM4 is relatively straight-forward. First, the seven MPI
+                        communicators are computed in the driver. Then the atmosphere, land, ocean, sea ice, and land
+                        ice models' initialization methods are called on the appropriate processor sets, and mpi
+                        communicator is sent, and grid and decomposition information are passed back to the driver. Once
+                        the driver has all the grid and decomposition information from the components, various
+                        rearrangers and mappers are initialized that will move data between processors, decompositions,
+                        and grids as needed at the driver level. No distinction is made in the coupler implementation
+                        for sequential versus concurrent execution. In general, even for cases where two components have
+                        identical grids and processor layouts, often their decomposition is different for performance
+                        reasons. In cases where the grid, decomposition, and processor layout are identical between
+                        components, the mapping or rearranging operation will degenerate to a local data copy.
+                    </p>
+                    <p>
+                        The interface to the components' run method consists of two distinct bundles of fields. One is
+                        the data sent to force the model. The second is data received from the model for coupling to
+                        other components. The run interface also contains a clock that specifies the current time and
+                        the run length for the model. These interfaces follow the ESMF design principles.
+                    </p>
+                    <h2 id="design_mct">MCT, The Model Coupling Toolkit</h2>
+                    <p>MCT was a critical piece of software in the CCSM3 cpl6 coupler...</p>
+
+                    <h2 id="design_perf">Memory, Parallel IO, and Performance</h2>
+                    <p>CCSM4 is targeting much higher resolutions than any previous CCSM coupled model...</p>
+
+                </div>
+
+                <div>
+                    <table>
+                        <tr>
+                            <td><a href="c17.html">Prev</a></td>
+                            <td><a href="book1.html">Home</a></td>
+                            <td><a href="c63.html">Next</a></td>
+                        </tr>
+                        <tr>
+                            <td>CPL7 User Guide</td>
+                            <td><a href="c17.html">Up</a></td>
+                            <td>CPL7 Implementation</td>
+                        </tr>
+                    </table>
+                </div>
+
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
