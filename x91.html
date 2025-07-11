@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>Chapter 3. CPL7 Implementation</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>CPL7 User's Guide</th>
+                            </tr>
+                            <tr>
+                                <td><a href="c63.html">Prev</a></td>
+                                <td>Chapter 3. CPL7 Implementation</td>
+                                <td><a href="x138.html">Next</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h1>Grids</h1>
+                <div>
+                    <h2><a name="implementation_std">Standard Grid Configurations</a></h2>
+
+                    <p>
+                        The standard implementation for grids in CCSM has been that the
+                        atmosphere and land models are run on identical grids and the
+                        ocean and sea ice model are run on identical grids. The ocean
+                        model mask is used to derive a complementary mask for the land
+                        grid such that for any given combination of atmosphere/land
+                        and ocean/ice grids, there is a unique land mask. This approach
+                        for dealing with grids is still used a majority of the time in
+                        CCSM4. But there is a new capability, called
+                        <a href="x91.html#implementation_trigrid">trigrid</a>, that allows
+                        the atmosphere and land grids to be unique. A typical grid in
+                        CCSM4 is named something like 1.9x2.5_gx1v6 which is the finite
+                        volume "2 degree" atmosphere/land grid matched with the gx1v6
+                        "1 degree" ocean/ice grid. This also has a shortname of f19_g16.
+                        The "out-of-the-box" supported grids, compsets, and machines in
+                        CCSM4 are generated automatically by running
+                    </p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <pre>
+create_newcase -list
+          </pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        from the scripts directory.
+                    </p>
+
+                    <p>
+                        Historically, the ocean grid has been the higher resolution grid in CCSM.
+                        While that is no longer always the case, the current implementation largely reflects
+                        that presumption. The atmosphere/ocean fluxes in the coupler are computed
+                        on the ocean grid. A new namelist input which is not yet validated called
+                        <a href="x371.html#nmlv_aoflux_grid">aoflux_grid</a>
+                        will allow the user to specify the atmosphere/ocean flux computation grid
+                        in the coupler in the future. In addition, the mapping approach used in
+                        CCSM4 also reflects the presumption that the ocean is generally higher
+                        resolution. Fluxes are always mapped using a locally conservative area average
+                        methods to preserve conservation. However, states are mapped using bilinear interpolation
+                        from the atmosphere grid to the ocean grid to better preserve gradients, while
+                        they are mapped using a locally conservative area average approach from the
+                        ocean grid to the atmosphere grid. These choices are based on the presumption
+                        that the ocean grid is higher resolution.
+                    </p>
+
+                    <p>
+                        There has always been an option that all grids (atmosphere, land, ocean, and ice)
+                        could be identical, and this is still supported. There are a couple of
+                        namelist variables, <a href="x371.html#nmlv_samegrid_ao">samegrid_ao</a>,
+                        <a href="x371.html#nmlv_samegrid_al">samegrid_al</a>, and
+                        <a href="x371.html#nmlv_samegrid_ro">samegrid_ro</a> that tell the coupler
+                        whether to expect that the following grids; atmosphere/ocean, atmosphere/land,
+                        and runoff/ocean respectively are identical. These are set automatically in the driver
+                        namelist depending on the grid chosen and impact
+                        <a href="x91.html#implementation_mapping">mapping</a> as well as
+                        <a href="x91.html#implementation_domain">domain checking</a>.
+                    </p>
+                </div>
+
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
