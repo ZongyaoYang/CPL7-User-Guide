@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>MCT and ESMF Coupling Interfaces</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <div>
+                    <table>
+                        <tr>
+                            <td><a href="x138.html">Prev</a></td>
+                            <td>Chapter 3. CPL7 Implementation</td>
+                            <td><a href="x148.html">Next</a></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+
+                <div>
+                    <h1><a name="implementation_interfaces">MCT and ESMF Coupling Interfaces</a></h1>
+
+                    <p>
+                        CCSM4 supports both CCSM-designed coupling interfaces based on MCT
+                        datatypes and ESMF coupling interfaces based on the ESMF design.
+                        In both cases, a top-level driver calls init, run, and finalize methods
+                        for each gridded component. The primary and default method for running
+                        CCSM4 is with the MCT-based interfaces and an ESMF library is not
+                        required in that case.
+                    </p>
+
+                    <p>
+                        ESMF interfaces are supported via translation methods that are
+                        instantiated in the <code>models/drv/shr_esmf</code> directory. These methods
+                        translate between the datatypes in the MCT interfaces and the datatypes
+                        in the ESMF interfaces. In the current CCSM4 ESMF interface implementation,
+                        the top-level driver still calls the init, run, and finalize component
+                        methods using the MCT interfaces. That interface does not match the
+                        ESMF interface provided by the gridded components. To facilitate
+                        translation, each component provides an additional layer where the
+                        MCT interfaces are translated to the ESMF interfaces and data is
+                        copied between datatypes on entry and exit of each method. The translation
+                        of MCT to ESMF datatypes and vice versa is supported via the shared
+                        source code in the <code>models/drv/shr_esmf</code> directory. In the future, the
+                        CCSM4 driver could be modified and the ESMF interfaces called directly
+                        thereby eliminating the extra translation layer.
+                    </p>
+
+                    <p>
+                        All CCSM4 components support both MCT interfaces and ESMF interfaces
+                        at the top level independently. This is specifically implemented using
+                        two distinct directories of source code to separate the interfaces,
+                        so one or the other can be compiled with the component model. These
+                        directories exist in all components and are generally called <code>cpl_mct</code> and
+                        <code>cpl_esmf</code>. The <code>cpl_mct</code> directory contains the MCT coupling interface.
+                        The <code>cpl_esmf</code> directory contains the ESMF coupling interfaces as well as
+                        the additional translation layer. At the present time, these interfaces
+                        are maintained independently and modifications within any of the
+                        interface methods will likely require modifications to the alternative
+                        interface for consistency.
+                    </p>
+
+                    <p>
+                        To use the ESMF interfaces, the ESMF version 4 release library
+                        must be installed locally and the <code>USE_ESMF_LIB</code> environment variable
+                        must be set to <code>TRUE</code> in the <code>env_build.xml</code> file. In addition,
+                        the <code>COMP_INTERFACE</code> value in <code>env_build.xml</code> must be set to
+                        <code>ESMF</code>.
+                        When those variables are set, components compile the source code
+                        in <code>cpl_esmf</code> instead of <code>cpl_mct</code> and the ESMF library is linked to
+                        the CCSM executable.
+                        Support of the ESMF interfaces is a relatively new feature in CCSM4.
+                        Results using either interface are bit-for-bit identical
+                        for several configurations tested, and validation of the implementation
+                        is ongoing.
+                    </p>
+                </div>
+
+                <div>
+                    <hr>
+                    <table>
+                        <tr>
+                            <td><a href="x138.html">Prev</a></td>
+                            <td><a href="book1.html">Home</a></td>
+                            <td><a href="x148.html">Next</a></td>
+                        </tr>
+                        <tr>
+                            <td>Initialization</td>
+                            <td><a href="c63.html">Up</a></td>
+                            <td>Driver Threading Control</td>
+                        </tr>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
