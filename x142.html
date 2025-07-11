@@ -21,7 +21,6 @@
                             <td><a href="x148.html">Next</a></td>
                         </tr>
                     </table>
-                    <hr>
                 </div>
 
                 <div>
@@ -38,7 +37,7 @@
 
                     <p>
                         ESMF interfaces are supported via translation methods that are
-                        instantiated in the <code>models/drv/shr_esmf</code> directory. These methods
+                        instantiated in the <tt>models/drv/shr_esmf</tt> directory. These methods
                         translate between the datatypes in the MCT interfaces and the datatypes
                         in the ESMF interfaces. In the current CCSM4 ESMF interface implementation,
                         the top-level driver still calls the init, run, and finalize component
@@ -48,7 +47,7 @@
                         MCT interfaces are translated to the ESMF interfaces and data is
                         copied between datatypes on entry and exit of each method. The translation
                         of MCT to ESMF datatypes and vice versa is supported via the shared
-                        source code in the <code>models/drv/shr_esmf</code> directory. In the future, the
+                        source code in the <tt>models/drv/shr_esmf</tt> directory. In the future, the
                         CCSM4 driver could be modified and the ESMF interfaces called directly
                         thereby eliminating the extra translation layer.
                     </p>
@@ -58,9 +57,9 @@
                         at the top level independently. This is specifically implemented using
                         two distinct directories of source code to separate the interfaces,
                         so one or the other can be compiled with the component model. These
-                        directories exist in all components and are generally called <code>cpl_mct</code> and
-                        <code>cpl_esmf</code>. The <code>cpl_mct</code> directory contains the MCT coupling interface.
-                        The <code>cpl_esmf</code> directory contains the ESMF coupling interfaces as well as
+                        directories exist in all components and are generally called <tt>cpl_mct</tt> and
+                        <tt>cpl_esmf</tt>. The <tt>cpl_mct</tt> directory contains the MCT coupling interface.
+                        The <tt>cpl_esmf</tt> directory contains the ESMF coupling interfaces as well as
                         the additional translation layer. At the present time, these interfaces
                         are maintained independently and modifications within any of the
                         interface methods will likely require modifications to the alternative
@@ -69,22 +68,20 @@
 
                     <p>
                         To use the ESMF interfaces, the ESMF version 4 release library
-                        must be installed locally and the <code>USE_ESMF_LIB</code> environment variable
-                        must be set to <code>TRUE</code> in the <code>env_build.xml</code> file. In addition,
-                        the <code>COMP_INTERFACE</code> value in <code>env_build.xml</code> must be set to
-                        <code>ESMF</code>.
+                        must be installed locally and the <tt>USE_ESMF_LIB</tt> environment variable
+                        must be set to <tt>TRUE</tt> in the <tt>env_build.xml</tt> file. In addition,
+                        the <tt>COMP_INTERFACE</tt> value in <tt>env_build.xml</tt> must be set to <tt>ESMF</tt>.
                         When those variables are set, components compile the source code
-                        in <code>cpl_esmf</code> instead of <code>cpl_mct</code> and the ESMF library is linked to
+                        in <tt>cpl_esmf</tt> instead of <tt>cpl_mct</tt> and the ESMF library is linked to
                         the CCSM executable.
                         Support of the ESMF interfaces is a relatively new feature in CCSM4.
                         Results using either interface are bit-for-bit identical
                         for several configurations tested, and validation of the implementation
                         is ongoing.
                     </p>
-                </div>
+                </div>˝
 
                 <div>
-                    <hr>
                     <table>
                         <tr>
                             <td><a href="x138.html">Prev</a></td>
