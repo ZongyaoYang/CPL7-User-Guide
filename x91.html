@@ -144,11 +144,8 @@
                         is mentioned below, that refers to a field sent from a component at initialization.
                     </p>
 
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <pre>
+                    <p>
+                    <pre>
 !  the fractions fields are now afrac, ifrac, ofrac, lfrac, and lfrin.
 !    afrac = fraction of atm on a grid
 !    lfrac = fraction of lnd on a grid
@@ -271,12 +268,73 @@
 !      fractions_a(lfrac) + fractions_a(ofrac) + fractions_a(ifrac) ~ 1.0
 !      0.0-eps < fractions_*(*) < 1.0+eps
           </pre>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    </p>
                 </div>
+                <div>
+                    <h2><a name="implementation_domain">Domain Checking</a></h2>
 
+                    <p>
+                        Domain checking is a very important initialization step in the system.
+                        The domain checking verifies that the longitudes, latitudes, areas,
+                        masks, and fractions of different grids are consistent with each other
+                        in a way that is required by the CCSM4 implementation. The subroutine that
+                        carries out domain checking is in models/drv/driver/seq_domain_mct.F90
+                        and is called seq_domain_check_mct. Tolerances for checking the domains
+                        can be set in the drv_in driver namelist via the namelist variables,
+                        <a href="x371.html#nmlv_eps_frac">eps_frac</a>,
+                        <a href="x371.html#nmlv_eps_amask">eps_amask</a>,
+                        <a href="x371.html#nmlv_eps_agrid">eps_agrid</a>,
+                        <a href="x371.html#nmlv_eps_aarea">eps_aarea</a>,
+                        <a href="x371.html#nmlv_eps_omask">eps_omask</a>,
+                        <a href="x371.html#nmlv_eps_ogrid">eps_ogrid</a>, and
+                        <a href="x371.html#nmlv_eps_oarea">eps_oarea</a>.
+                        These values are derived in the coupler namelist from the
+                        script env variables, EPS_FRAC, EPS_AMASK, EPS_AGRID, EPS_AAREA,
+                        EPS_OMASK, EPS_OGRID, and EPS_OAREA in the env_run.xml file.
+                        If an error is detected in the domain checking, the model will write
+                        an error message and abort.
+                    </p>
+
+                    <p>
+                        The domain checking is dependent on the grids and in particular, the
+                        samegrid input namelist settings. But it basically does the following:
+                    </p>
+
+                    <div>
+                        <code>
+ocean/ice grid comparison:<br>
+  - verifies the grids are the same size<br>
+  - verifies the difference in longitudes and latitudes is less than eps_ogrid.<br>
+  - verifies the difference in masks is less than eps_omask<br>
+  - verifies the difference in areas is less than eps_oarea<br><br>
+
+atmosphere/land grid comparison (if samegrid_al):<br>
+  - verifies the grids are the same size<br>
+  - verifies the difference in longitudes and latitudes is less than eps_agrid.<br>
+  - verifies the difference in masks is less than eps_amask<br>
+  - verifies the difference in areas is less than eps_aarea<br><br>
+
+atmosphere/ocean grid comparison (if samegrid_ao):<br>
+  - verifies the grids are the same size<br>
+  - verifies the difference in longitudes and latitudes is less than eps_agrid.<br>
+  - verifies the difference in masks is less than eps_amask<br>
+  - verifies the difference in areas is less than eps_aarea<br><br>
+
+fractions<br>
+  - verifies that the land fraction on the atmosphere grid and the<br>
+    ocean fraction on the atmosphere grid add to one within a tolerance of eps_frac.
+    </code>
+                    </div>
+
+                    <p>
+                        There are a number of subtle aspects in the domain checking like whether
+                        to check over masked grid cells, but these issues are less important than
+                        recognizing that errors in the domain checking should be treated seriously.
+                        It is easy to make the errors go away by changing the tolerances, but it
+                        is also easy to overlook a critical grid error that can impact conservation
+                        and consistency in a simulation.
+                    </p>
+                </div>
 
 
 
