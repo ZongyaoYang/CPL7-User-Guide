@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>Template</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <div>
+                    <table>
+                        <tr>
+                            <td><a href="x91.html">Prev</a></td>
+                            <td>Chapter 3. CPL7 Implementation</td>
+                            <td><a href="x142.html">Next</a></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+
+                <div>
+                    <h1><a name="implementation_initialization">Initialization</a></h1>
+
+                    <p>
+                        The CCSM initialization has been developed over the last two decades
+                        to meet the scientific goals, minimize the communication required,
+                        and ensure a consistent and well-defined climate system. The order
+                        of operations is critical. The CCSM4 initialization is basically
+                        as follows:
+                    </p>
+
+                    <code>
+The ccsm_pes namelist is read and mpi communicators are initialized.<br>
+The seq_infodata namelist is read and configuration settings are established.<br>
+The prof_inparm namelist is read and the timing tool is initialized.<br>
+The pio_inparm namelist is read and the driver IO is initialized.<br>
+The seq_timemgr namelist is read and the driver time manager and clocks are initialized.<br>
+The atmosphere init routine is called, the mpi communicator and clock are sent, and the atmosphere grid is returned.<br>
+The land init routine is called, the mpi communicator and clock are sent, and the land grid is returned.<br>
+The ocean init routine is called, the mpi communicator and clock are sent, and the ocean grid is returned.<br>
+The ice init routine is called, the mpi communicator and clock are sent, and the ice grid is returned.<br>
+The land ice init routine is called, the mpi communicator and clock are sent, and the land ice grid is returned.<br>
+The infodata buffer is synchronized across all processors. This buffer contains many model configuration settings set by the driver but also sent from the components.<br>
+The mapping areas are initialized to the component areas on the component pes.<br>
+The atmosphere, land, runoff, ice, land ice, and ocean rearrangers are initialized. These rearrangers move component data between the component pes and the coupler pes.<br>
+Initialize the coupler to component fields and zero them out.<br>
+The ocean accumulator is initialized and zeroed out. This is used to accumulate and average the ocean input.<br>
+Datatypes associated with merging are allocated.<br>
+The atm2ocn, ocn2atm, ocn2ice, ice2ocn, ice2atm, rof2ocn, atm2lnd, and lnd2atm mapping weights and areas are read.<br>
+Component grids are checked using the domain checking method.<br>
+The flux area corrections are initialized on the component pes and applied to the initial fields sent by each component on the component pes. Those initial fields are then rearranged to the coupler pes.<br>
+The fractions are initialized on the coupler pes.<br>
+The atmosphere/ocean flux computation is initialized and initial ocean albedos are computed on the coupler pes.<br>
+The land, ocean, and ice initial data is mapped to the atmosphere grid and merged to generate initial atmosphere forcing data. This is really only needed for the albedo fields.<br>
+The initial atmosphere forcing data (albedos) is rearranged from the coupler pes to the atmosphere pes, and the area corrections are applied.<br>
+The atmosphere init method is called to run the second phase which initializes the atmosphere radiation based on the surface albedos sent.<br>
+The new atmosphere initial data is area corrected and rearranged to the coupler pes.<br>
+The budget diagnostics are zeroed out.<br>
+Initialization is complete.
+  </code>
+                </div>
+
+                <div>
+                    <hr>
+                    <table>
+                        <tr>
+                            <td><a href="x91.html">Prev</a></td>
+                            <td><a href="book1.html">Home</a></td>
+                            <td><a href="x142.html">Next</a></td>
+                        </tr>
+                        <tr>
+                            <td>Grids</td>
+                            <td><a href="c63.html">Up</a></td>
+                            <td>MCT and ESMF Coupling Interfaces</td>
+                        </tr>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
