@@ -335,8 +335,137 @@ fractions<br>
                         and consistency in a simulation.
                     </p>
                 </div>
+                <div>
+                    <h2><a name="implementation_mapping">Mapping (Interpolation)</a></h2>
 
+                    <p>
+                        Mapping files to support interpolation of fields between
+                        grids are computed offline. Generally, this is done using the SCRIP package,
+                        but any package that generates a mapping file of valid format can be used
+                        in CCSM. Several different mapping approaches are used in CCSM4. First, note that
+                        historically, the ocean grid has been the higher resolution grid in CCSM.
+                        While that is no longer always the case, the current implementation largely reflects
+                        that presumption. In general, mapping of fluxes is done using a locally conservative
+                        area average approach to preserve conservation. State fields are generally mapped
+                        using bilinear interpolation from the atmosphere grid to the ocean grid to better
+                        preserve gradients, but state fields are generally mapped using the conservative
+                        area average approach from the ocean grid to the atmosphere grid. But this is not
+                        a requirement of the system. The individual state and flux mapping files are
+                        specified at runtime using the <a href="x1044.html">seq_maps.rc</a>
+                        input file, and any valid mapping file using any mapping approach can be specified
+                        in that input file.
+                    </p>
 
+                    <p>
+                        The <a href="x1044.html">seq_maps.rc</a> file contains information
+                        about the mapping files as well as the mapping type. There are currently two
+                        types of mapping implementations, "X" and "Y". The "X" mapping rearranges the
+                        source data to the destination grid decomposition and then a local mapping
+                        is done from the source to the destination grid on the destination decomposition.
+                        The "Y" mapping does a local mapping from the source grid to the destination
+                        grid on the source grid decomposition. That generates a partial sum of the
+                        destination values which are then rearranged to the destination decomposition
+                        and summed. Both options produce reasonable results, although they may
+                        differ in value by "roundoff" due to differences in order or operations.
+                        The type chosen impacts performance. In both implementations, the number of
+                        flops is basically identical. The difference is the communication. In the
+                        "X" type, the source grid is rearranged. In the "Y" type, the destination
+                        grid is rearranged. Since historically, the ocean grid is higher resolution
+                        than the atmosphere grid, "X" mapping is used for atmosphere to ocean/ice mapping
+                        and "Y" mapping is used from ocean/ice to atmosphere mapping to maximize
+                        mapping performance.
+                    </p>
+
+                    <p>
+                        Mapping corrections are made in some cases in the polar region. In particular, the
+                        current bilinear and area conservative mapping approaches introduce relatively large
+                        errors in mapping vector fields around the pole. The current coupler
+                        corrects the interpolated surface wind velocity near the pole when mapping from the
+                        atmosphere to the ocean and ice grids. This only affects ocean and ice grid cells
+                        that are northward of the last latitude line of the atmospheric grid. The
+                        algorithm is contained in the file models/drv/driver/map_atmocn_mct.F90 and
+                        is only valid when the atmosphere grid is a longitude/latitude grid. This feature
+                        is generally on by default, but it can be turned off manually using the
+                        <a href="x371.html#nmlv_npfix">npfix</a> namelist input in the drv_in file.
+                        This feature is turned off automatically by grid settings for grids in CCSM that
+                        are not longitude/latitude grids such as the homme dycore atmospheric grid.
+                    </p>
+
+                    <p>
+                        The input mapping files are assumed to be valid for grids with masks of
+                        value zero or one where grid points with a mask of zero are never considered
+                        in the mapping. Well-defined, locally conservative area mapping files as
+                        well as bilinear mapping files can be generated using this masked approach. However,
+                        there is another issue which is that a grid fraction in an active cell might
+                        actually change over time. This is not the case for land fraction in CCSM, but
+                        it is the case for relative ice and ocean fractions in CCSM. The ice fraction
+                        is constantly evolving in the system in general. To improve the accuracy
+                        of the ice and ocean mapping, the ocean/ice fields are scaled by the local
+                        fraction before mapping and unscaled by the mapped fraction after mapping.
+                    </p>
+
+                    <p>
+                        The easiest way to demonstrate this is via an example. Consider a case where
+                        two ice cells of equal area underlie a single atmosphere cell completely.
+                        The mapping weight of each ice cell generated offline would be 0.5 in this
+                        case and if ice temperatures of -1.0 and -2.0 in the two cells respectively
+                        were mapped to the atmosphere grid, a resulting ice temperature on the atmosphere
+                        grid of -1.5 would result. Consider the case where one cell has an ice fraction
+                        of 0.3 and the other has a fraction of 0.5. Mapping the ice fraction to the
+                        atmospheric cell results in a value of 0.4. If the same temperatures are mapped
+                        in the same way, a temperature of -1.5 results which is reasonable, but not
+                        entirely accurate. Because of the relative ice fractions, the weight of the
+                        second cell should be greater than the weight of the first cell. Taking this
+                        into account properly results in a fraction-weighted ice temperature of -1.625
+                        in this example. This is the fraction correction that is carried out whenever
+                        ocean and ice fields are mapped to the atmosphere grid. Time-varying fraction corrections
+                        are not required in other mappings to improve accuracy because their relative
+                        fractions remain static.
+                    </p>
+                </div>
+                <div>
+                    <h2><a name="implementation_grid_area">Area Correction of Fluxes</a></h2>
+                    <p>
+                        To improve conservation in the system, all fluxes sent to and
+                        received from components are corrected for the area differences
+                        between the components. There are many reasonable ways to compute
+                        an area of a grid cell, but they are not generally consistent.
+                        One assumption with respect to conservation of fluxes is that the
+                        area acting upon the flux is well defined. Differences in area
+                        calculations can result in differences of areas up to a few
+                        percent and if these are not corrected, will impact overall mass
+                        and heat conservation. In CCSM4, areas are extracted for each
+                        grid from the mapping files. In this implementation,
+                        it is assumed that the areas in all mapping files are computed
+                        reasonably and consistently for each grid and on different grids.
+                        Those mapping areas are used to correct the fluxes for each
+                        component by scaling the fluxes sent to and received by the
+                        component by the ratio of the mapping area and the component area.
+                        The areas from the components are provided to the coupler by the
+                        component at initialization. The minimum and maximum value of each
+                        area corrections is written to the coupler log file at initialization.
+                        One critical point is that if mapping files are generated by different
+                        tools offline and used in CCSM, an error could be introduced that is
+                        related to inconsistent areas provided by different mapping files.
+                    </p>
+                </div>
+                <div>
+                    <hr>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><a href="c63.html">Prev</a></td>
+                                <td><a href="book1.html">Home</a></td>
+                                <td><a href="x138.html">Next</a></td>
+                            </tr>
+                            <tr>
+                                <td>CPL7 Implementation</td>
+                                <td><a href="c63.html">Up</a></td>
+                                <td>Initialization</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             </article>
         </div>
