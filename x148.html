@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>Template</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article>
+                <div>
+                    <table summary="Header navigation table">
+                        <tr>
+                            <th colspan="3">CPL7 User's Guide</th>
+                        </tr>
+                        <tr>
+                            <td><a href="x142.html" accesskey="P">Prev</a></td>
+                            <td>Chapter 3. CPL7 Implementation</td>
+                            <td><a href="x152.html" accesskey="N">Next</a></td>
+                        </tr>
+                    </table>
+                    <hr>
+                </div>
+                <div>
+                    <h1><a name="implementation_threading">Driver Threading Control</a></h1>
+                    <p>
+                        OpenMP thread counts are controlled at three levels in CCSM4. The coarsest level
+                        is prior to launching the model in the CCSM run script. The environment
+                        variable OMP_NUM_THREADS is usually set to the largest value any mpi task
+                        will use in CCSM4. At a minimum, this will ensure threading is turned on
+                        to the maximum desired value in the run. The next level is during initialization
+                        in CCSM4. When the mpi communicators are initialized, the maximum number of threads
+                        per mpi task can be computed based on the ccsm_pes namelist input. At that
+                        point, there is an initial fortran call to the intrinsic, omp_set_num_threads.
+                        When that happens and if that call is successful, the number of threads
+                        will be set to the maximum needed in the system on an mpi task by task basis.
+                        Finally, there is the ability of CCSM to change the thread count per task as each
+                        component is individually called and as the model integrates through the
+                        driver run loop. In other words, for components that share
+                        the same hardware processor but have different threads per task, this
+                        feature allows those components to run with the exact value set by the user
+                        in the ccsm_pes namelist. This final level of thread control is turned off by default,
+                        but it can be turned on using the <a href="x371.html#nmlv_drv_threading">drv_threading</a>
+                        namelist input. This fine control of threading is likely of limited use
+                        at this point given the current CCSM4 driver implementation.
+                    </p>
+                </div>
+
+                <div>
+                    <hr>
+                    <table summary="Footer navigation table">
+                        <tr>
+                            <td><a href="x142.html" accesskey="P">Prev</a></td>
+                            <td><a href="book1.html" accesskey="H">Home</a></td>
+                            <td><a href="x152.html" accesskey="N">Next</a></td>
+                        </tr>
+                        <tr>
+                            <td>MCT and ESMF Coupling Interfaces</td>
+                            <td><a href="c63.html" accesskey="U">Up</a></td>
+                            <td>The bit-for-bit (BFB) Flag</td>
+                        </tr>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
