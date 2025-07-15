@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>Template</title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+
+                <div>
+                    <table summary="Header navigation table">
+                        <tbody>
+                            <tr>
+                                <td><a href="x156.html" accesskey="P">Prev</a></td>
+                                <td>Chapter 3. CPL7 Implementation</td>
+                                <td><a href="c173.html" accesskey="N">Next</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <h1><a name="implementation_budget">Budget Setup and Computation</a></h1>
+                    <p>
+                        Mass and heat are conserved in the coupler to several digits over centuries.
+                        Several steps have been taken to ensure this level of conservation, and these
+                        are described in other sections of the document. In addition, efforts
+                        have been made to make sure each component is internally conservative
+                        with respect to mass and heat.
+                    </p>
+                    <p>
+                        The budgets can be turned on and off using the namelist variable
+                        <a href="x371.html#nmlv_do_budgets">do_budgets</a>. The value of that
+                        namelist is set by the env variable, BUDGETS in env_run.xml. By default, the
+                        do_budgets flag is false and budgets are not generated.
+                        The CCSM4 coupler can
+                        diagnose the CCSM4 budget at several levels and over different periods.
+                        The periods are instantenous, daily average, monthly average, annual
+                        average, or since the start of the run. The budget output for each of
+                        these periods is controlled by the namelist input
+                        <a href="x371.html#nmlv_budget_inst">budget_inst</a>,
+                        <a href="x371.html#nmlv_budget_daily">budget_daily</a>,
+                        <a href="x371.html#nmlv_budget_month">budget_month</a>,
+                        <a href="x371.html#nmlv_budget_ann">budget_ann</a>,
+                        <a href="x371.html#nmlv_budget_ltann">budget_ltann</a>, and
+                        <a href="x371.html#nmlv_budget_ltend">budget_ltend</a>. budget_ltann
+                        and budget_ltend are used to write the long term budget at either the
+                        end of every year or the end of every run. Other budgets are written
+                        at their period interval. The namelist input is an integer specifying
+                        what to write. The budget flags are controlled by env variables in
+                        env_run.xml named BUDGET_INST, BUDGET_DAILY, BUDGET_MONTHLY, BUDGET_ANNUAL,
+                        BUDGET_LONGTER_EOY, and BUDGET_LONGTERM_STOP respectively. Valid values
+                        are 0, 1, 2, or 3. If 0 is set, no budget data is written. The value 1
+                        generates a net heat and water budget for each component, 2 adds a
+                        detailed heat and water budget for each component, and 3 adds a detailed
+                        heat and water budget of the different conmponents on the atmosphere grid.
+                        Normally values of 0 or 1 are specified. Values of 2 or 3 are generally
+                        used only when debugging problems involving conservation.
+                    </p>
+                </div>
+
+                <div>
+                    <table summary="Footer navigation table">
+                        <tbody>
+                            <tr>
+                                <td><a href="x156.html" accesskey="P">Prev</a></td>
+                                <td><a href="book1.html" accesskey="H">Home</a></td>
+                                <td><a href="c173.html" accesskey="N">Next</a></td>
+                            </tr>
+                            <tr>
+                                <td>History and Restart Files</td>
+                                <td><a href="c63.html" accesskey="U">Up</a></td>
+                                <td>CPL7 Namelist</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </bdy>
+
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
