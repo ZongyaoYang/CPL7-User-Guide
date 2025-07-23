@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- css -->
+    <!--#include virtual="/styles/unity/css/css-include.html" -->
+    <title>drv_in Input File
+    </title>
+</head>
+
+<body class="ncar">
+    <!-- header include -->
+    <!--#include virtual="/styles/unity/includes/header/header.html" -->
+    <main class="container-lg py-2 pt-md-3">
+        <div class="d-grid d-print-flex">
+            <article class="main-content-wrapper">
+                <div>
+                    <table summary="Header navigation table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a href="x350.html" accesskey="P">Prev</a>
+                                </td>
+                                <td><a href="index.html">Home</a></td>
+                                <td>
+                                    <a href="x1044.html" accesskey="N">Next</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h1>drv_in Input File</h1>
+                    <p>
+                        The drv_in input file contains several different namelist groups associated with general
+                        options, time manager options, pe layout, timing output, and parallel IO settings.
+                        The different groups are seq_infodata_inparm, seq_timemgr_inparm, ccsm_pes, prof_inparm,
+                        and pio_inparm.
+                    </p>
+                    <div>
+                        <h2>
+                            <a name="nml_infodata">seq_infodata_inparm namelist</a>
+                        </h2>
+                        <p>
+                            These namelist are associated with some general driver/coupler options.
+                        </p>
+                        <div>
+                            <dl>
+                                <dt><a name="nmlv_aoflux_grid"></a><code>aoflux_grid (char)</code></dt>
+                                <dd>
+                                    <p> untested</p>
+                                </dd>
+                                <dt><a name="nmlv_aqua_planet"></a><code>aqua_planet (log)</code></dt>
+                                <dd>
+                                    <p> turns on aqua planet mode. this mode is only available in limited
+                                        configurations. default=false.</p>
+                                </dd>
+                                <dt><a name="nmlv_atm_adiabatic"></a><code>atm_adiabatic (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on atm model adiabatic mode. this mode is only available in limited
+                                        configurations. default=false.</p>
+                                </dd>
+                                <dt><a name="nmlv_atm_ideal_phys"></a><code>atm_ideal_phys (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on atm ideal physics mode. this mode is only available in limited
+                                        configurations. default=false.</p>
+                                </dd>
+                                <dt><a name="nmlv_bfbflag"></a><code>bfbflag (log)</code></dt>
+                                <dd>
+                                    <p> turns on bfb option in coupler which produce bfb results in the coupler on
+                                        different processor counts. set by BFBFLAG in env_run.xml, default=false.</p>
+                                </dd>
+                                <dt><a name="nmlv_brnch_retain_casename"></a><code>brnch_retain_casename (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> information about whether the base casename can be reused for the branch
+                                        casename. </p>
+                                </dd>
+                                <dt><a name="nmlv_budget_ann"></a><code>budget_ann (int)</code></dt>
+                                <dd>
+                                    <p> sets the diagnotics level of the annual budgets. [0,1,2,3], 0=none, 1=+net
+                                        summary budgets, 2=+detailed lnd/ocn/ice component budgets, 3=+detailed atm
+                                        budgets, set by BUDGET_ANNUAL in env_run.xml. default=1</p>
+                                </dd>
+                                <dt><a name="nmlv_budget_daily"></a><code>budget_daily (int)</code></dt>
+                                <dd>
+                                    <p> sets the diagnotics level of the daily budgets. [0,1,2,3], 0=none, 1=+net
+                                        summary budgets, 2=+detailed lnd/ocn/ice component budgets, 3=+detailed atm
+                                        budgets, set by BUDGET_DAILY in env_run.xml. default=0</p>
+                                </dd>
+                                <dt><a name="nmlv_budget_inst"></a><code>budget_inst (int)</code></dt>
+                                <dd>
+                                    <p> sets the diagnotics level of the instantaneous budgets. [0,1,2,3], 0=none,
+                                        1=+net summary budgets, 2=+detailed lnd/ocn/ice component budgets, 3=+detailed
+                                        atm budgets, set by BUDGET_INST in env_run.xml. default=0</p>
+                                </dd>
+                                <dt><a name="nmlv_budget_ltann"></a><code>budget_ltann (int)</code></dt>
+                                <dd>
+                                    <p> sets the diagnotics level of the longterm budgets written at the end of the
+                                        year. [0,1,2,3], 0=none, 1=+net summary budgets, 2=+detailed lnd/ocn/ice
+                                        component budgets, 3=+detailed atm budgets, set by BUDGET_LONGTERM_EOY in
+                                        env_run.xml. default=1</p>
+                                </dd>
+                                <dt><a name="nmlv_budget_ltend"></a><code>budget_ltend (int)</code></dt>
+                                <dd>
+                                    <p> sets the diagnotics level of the longterm budgets written at the end of each
+                                        run. [0,1,2,3], 0=none, 1=+net summary budgets, 2=+detailed lnd/ocn/ice
+                                        component budgets, 3=+detailed atm budgets, set by BUDGET_LONGTERM_STOP in
+                                        env_run.xml. default=0</p>
+                                </dd>
+                                <dt><a name="nmlv_budget_month"></a><code>budget_month (int)</code></dt>
+                                <dd>
+                                    <p> sets the diagnotics level of the monthy budgets. [0,1,2,3], 0=none, 1=+net
+                                        summary budgets, 2=+detailed lnd/ocn/ice component budgets, 3=+detailed atm
+                                        budgets, set by BUDGET_MONTHLY in env_run.xml. default=1</p>
+                                </dd>
+                                <dt><a name="nmlv_case_desc"></a><code>case_desc (char)</code></dt>
+                                <dd>
+                                    <p> case description. set by CASESTR in env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_case_name"></a><code>case_name (char)</code></dt>
+                                <dd>
+                                    <p> case name. set by CASE in env_case.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_cpl_cdf64"></a><code>cpl_cdf64 (log)</code></dt>
+                                <dd>
+                                    <p> flag for 64 bit netcdf files for the cpl component, may or may not be used by
+                                        the cpl component depending on cpl implementation. default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_do_budgets"></a><code>do_budgets (log)</code></dt>
+                                <dd>
+                                    <p> turns on budget calculation and budget output, set by BUDGETS in env_run.xml.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_drv_threading"></a><code>drv_threading (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turn on run time control of threading per pe per component by the driver. set by
+                                        DRV_THREADING in env_run.xml. default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_aarea"></a><code>eps_aarea (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the atm/lnd areas, absolute differences,
+                                        set by EPS_AAREA in env_run.xml. default=9.0e-07</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_agrid"></a><code>eps_agrid (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the atm/lnd longitudes and latitudes,
+                                        absolute differences, set by EPS_AGRID in env_run.xml. default=1.0e-12</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_amask"></a><code>eps_amask (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the atm/lnd mask, absolute differences,
+                                        set by EPS_AMASK in env_run.xml. default=1.0e-13</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_frac"></a><code>eps_frac (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the domain fractions, absolute
+                                        differences. set by EPS_FRAC in env_run.xml. default=1.0e-02</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_oarea"></a><code>eps_oarea (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the ocn/ice areas, absolute differences,
+                                        set by EPS_OAREA in env_run.xml. default=1.0e-01</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_ogrid"></a><code>eps_ogrid (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the ocn/ice longitudes and latitudes,
+                                        absolute differences, set by EPS_OGRID in env_run.xml. default=1.0e-02</p>
+                                </dd>
+                                <dt><a name="nmlv_eps_omask"></a><code>eps_omask (r8)</code></dt>
+                                <dd>
+                                    <p> variable associated with error checking the ocn/ice mask, absolute differences,
+                                        set by EPS_OMASK in env_run.xml. default=1.0e-06</p>
+                                </dd>
+                                <dt><a name="nmlv_flux_albav"></a><code>flux_albav (log)</code></dt>
+                                <dd>
+                                    <p> turns on albedo averaging. set by CPL_ALBAV in env_run.xml, default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_flux_epbal"></a><code>flux_epbal (char)</code></dt>
+                                <dd>
+                                    <p> turns on fresh water balance in coupler, set by CPL_EPBAL in env_run.xml,
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_histaux_a2x"></a><code>histaux_a2x (log)</code></dt>
+                                <dd>
+                                    <p> turns on coupler history stream for instantaneous atm to coupler fields.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_histaux_a2x24hr"></a><code>histaux_a2x24hr (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on coupler history stream for daily average atm to coupler fields.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_histaux_a2x3hr"></a><code>histaux_a2x3hr (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on coupler history stream for 3-hour average atm to coupler fields.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_histaux_a2x3hrp"></a><code>histaux_a2x3hrp (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on coupler history stream for 3-hour average atm to coupler precip fields.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_histaux_l2x"></a><code>histaux_l2x (log)</code></dt>
+                                <dd>
+                                    <p> turns on coupler history stream for instantaneous land to coupler fields.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_histaux_r2x"></a><code>histaux_r2x (log)</code></dt>
+                                <dd>
+                                    <p> turns on coupler history stream for instantaneous runoff to coupler fields.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_hostname"></a><code>hostname (char)</code></dt>
+                                <dd>
+                                    <p> hostname information, set by MACH in env_case.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_info_debug"></a><code>info_debug (int)</code></dt>
+                                <dd>
+                                    <p> debug level in driver/coupler, set by INFO_DBUG in env_run.xml, default=1.</p>
+                                </dd>
+                                <dt><a name="nmlv_logFilePostFix"></a><code>logFilePostFix (char)</code>
+                                </dt>
+                                <dd>
+                                    <p> untested</p>
+                                </dd>
+                                <dt><a name="nmlv_model_version"></a><code>model_version (char)</code>
+                                </dt>
+                                <dd>
+                                    <p> model version documentation, set by CCSM_REPOTAG in env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_npfix"></a><code>npfix (log)</code></dt>
+                                <dd>
+                                    <p> turns on special north pole fix for u and v vector mapping between atm and ocean
+                                        grids in the coupler. set by NPFIX in env_run.xml default=true</p>
+                                </dd>
+                                <dt><a name="nmlv_ocean_tight_coupling"></a><code>ocean_tight_coupling (log)</code></dt>
+                                <dd>
+                                    <p> turns on ocean tight coupling flag which forces the ocean to coupling at the
+                                        same time as the other surface models. by default, there is a lag of one coupler
+                                        timestep in addition to any difference in coupling frequency to accomodate the
+                                        ability to run the ocean concurrently with the rest of the system for
+                                        performance reasons. set by OCN_TIGHT_COUPLING in env_run.xml. default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_orb_eccen"></a><code>orb_eccen (r8)</code></dt>
+                                <dd>
+                                    <p> eccentricity of orbit, either the orb_iyear_AD must be set or the other three
+                                        orb parameter must be set. default=unset</p>
+                                </dd>
+                                <dt><a name="nmlv_orb_iyear_AD"></a><code>orb_iyear_AD (int)</code></dt>
+                                <dd>
+                                    <p> year of orbit, either the orb_iyear_AD must be set or the other three orb
+                                        parameter must be set. default=unset</p>
+                                </dd>
+                                <dt><a name="nmlv_orb_mvelp"></a><code>orb_mvelp (r8)</code></dt>
+                                <dd>
+                                    <p> location of vernal equinox in longitude degrees, either the orb_iyear_AD must be
+                                        set or the other three orb parameter must be set. default=unset</p>
+                                </dd>
+                                <dt><a name="nmlv_orb_obliq"></a><code>orb_obliq (r8)</code></dt>
+                                <dd>
+                                    <p> obliquity of orbit in degrees, either the orb_iyear_AD must be set or the other
+                                        three orb parameter must be set. default=unset</p>
+                                </dd>
+                                <dt><a name="nmlv_outPathRoot"></a><code>outPathRoot (char)</code></dt>
+                                <dd>
+                                    <p> untested</p>
+                                </dd>
+                                <dt><a name="nmlv_perpetual"></a><code>perpetual (log)</code></dt>
+                                <dd>
+                                    <p> flag to turn on perpetual mode, default=false (untested?)</p>
+                                </dd>
+                                <dt><a name="nmlv_perpetual_ymd"></a><code>perpetual_ymd (int)</code>
+                                </dt>
+                                <dd>
+                                    <p> ymd date of perpetual mode, default=unset (untested?)</p>
+                                </dd>
+                                <dt><a name="nmlv_restart_file"></a><code>restart_file (char)</code></dt>
+                                <dd>
+                                    <p> driver restart file. if set, this overwrites anything in the restart_pfile file.
+                                        default=unset and uses filename in restart_pfile.</p>
+                                </dd>
+                                <dt><a name="nmlv_restart_pfile"></a><code>restart_pfile (char)</code>
+                                </dt>
+                                <dd>
+                                    <p> restart pointer filename. default="rpointer.drv"</p>
+                                </dd>
+                                <dt><a name="nmlv_samegrid_al"></a><code>samegrid_al (log)</code></dt>
+                                <dd>
+                                    <p> tells the coupler to treat the atm and land grids as "the same". automatically
+                                        set by comparison of ATM_GRID and LND_GRID set in env_case.xml. default=true</p>
+                                </dd>
+                                <dt><a name="nmlv_samegrid_ao"></a><code>samegrid_ao (log)</code></dt>
+                                <dd>
+                                    <p> tells the coupler to treat the atm and ocean grids as "the same". automatically
+                                        set by comparison of ATM_GRID and OCN_GRID set in env_case.xml. default=true</p>
+                                </dd>
+                                <dt><a name="nmlv_samegrid_ro"></a><code>samegrid_ro (log)</code></dt>
+                                <dd>
+                                    <p> tells the coupler to treat the runoff and ocean grids as "the same".
+                                        automatically set by comparison of LND_GRID and OCN_GRID set in env_case.xml.
+                                        default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_shr_map_dopole"></a><code>shr_map_dopole (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on special polar mapping feature in shr_map_mod. set by SHR_MAP_DOPOLE in
+                                        env_run.xml. default=true</p>
+                                </dd>
+                                <dt><a name="nmlv_scmlon"></a><code>scmlon (r8)</code></dt>
+                                <dd>
+                                    <p> grid point longitude associated with single column mode. set by PTS_LON in
+                                        env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_scmlat"></a><code>scmlat (r8)</code></dt>
+                                <dd>
+                                    <p> grid point latitude associated with single column mode. set by PTS_LAT in
+                                        env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_single_column"></a><code>single_column (log)</code>
+                                </dt>
+                                <dd>
+                                    <p> turns on single column mode. set by PTS_MODE in env_case.xml, default=false</p>
+                                </dd>
+                                <dt><a name="nmlv_start_type"></a><code>start_type (char)</code></dt>
+                                <dd>
+                                    <p> mode to start the run up, [startup,branch,continue], set by RUN_TYPE in
+                                        env_conf.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_timing_dir"></a><code>timing_dir (char)</code></dt>
+                                <dd>
+                                    <p> location of timing output.</p>
+                                </dd>
+                                <dt><a name="nmlv_tchkpt_dir"></a><code>tchkpt_dir (char)</code></dt>
+                                <dd>
+                                    <p> location of timing checkpoint output.</p>
+                                </dd>
+                                <dt><a name="nmlv_username"></a><code>username (char)</code></dt>
+                                <dd>
+                                    <p> username documentation, set by CCSMUSER in env_run.xml</p>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                </div>
+
+            </article>
+        </div>
+    </main>
+    <!-- footer & javascript includes -->
+    <!--#include virtual="/styles/unity/includes/footer/footer.html" -->
+    <!--#include virtual="/styles/unity/js/js-include.html" -->
+</body>
+
+</html>
