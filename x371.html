@@ -348,7 +348,189 @@
                             </dl>
                         </div>
                     </div>
-
+                    <div>
+                        <h2><a name="nml_timemgr">seq_timemgr_inparm namelist</a></h2>
+                        <p>
+                            This namelist is associated with time manager options.
+                        </p>
+                        <p></p>
+                        <div class="variablelist">
+                            <dl>
+                                <dt><a name="nmlv_atm_cpl_dt"></a><code class="option">atm_cpl_dt (int)</code></dt>
+                                <dd>
+                                    <p> atm coupling timestep in seconds. set via ATM_NCPL in env_run.xml. ATM_NCPL is
+                                        the number of times the atm is coupled per day.</p>
+                                </dd>
+                                <dt><a name="nmlv_atm_cpl_offset"></a><code class="option">atm_cpl_offset (int)</code>
+                                </dt>
+                                <dd>
+                                    <p> controls phasing of the coupling. offset in seconds. default=0.</p>
+                                </dd>
+                                <dt><a name="nmlv_calendar"></a><code class="option">calendar (char)</code></dt>
+                                <dd>
+                                    <p> calendar in use. [NO_LEAP, GREOGORIAN]. default="NO_LEAP". set by CALENDAR in
+                                        env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_curr_tod"></a><code class="option">curr_tod (int)</code></dt>
+                                <dd>
+                                    <p> untested</p>
+                                </dd>
+                                <dt><a name="nmlv_curr_ymd"></a><code class="option">curr_ymd (int)</code></dt>
+                                <dd>
+                                    <p> untested</p>
+                                </dd>
+                                <dt><a name="nmlv_end_restart"></a><code class="option">end_restart (log)</code></dt>
+                                <dd>
+                                    <p> forces a restart write at the end of the run in addition to any setting
+                                        associated with rest_option. default=true. this setting will be set to false if
+                                        restart_option is none or never.</p>
+                                </dd>
+                                <dt><a name="nmlv_glc_cpl_dt"></a><code class="option">glc_cpl_dt (int)</code></dt>
+                                <dd>
+                                    <p> glc coupling timestep in seconds. set via GLC_NCPL in env_run.xml. GLC_NCPL is
+                                        the number of times the glc is coupled per day.</p>
+                                </dd>
+                                <dt><a name="nmlv_glc_cpl_offset"></a><code class="option">glc_cpl_offset (int)</code>
+                                </dt>
+                                <dd>
+                                    <p> controls phasing of the coupling. offset in seconds. default=0.</p>
+                                </dd>
+                                <dt><a name="nmlv_history_n"></a><code class="option">history_n (int)</code></dt>
+                                <dd>
+                                    <p> number associated with history_option. default=-1. set by HIST_N in env_run.xml.
+                                    </p>
+                                </dd>
+                                <dt><a name="nmlv_history_option"></a><code class="option">history_option (char)</code>
+                                </dt>
+                                <dd>
+                                    <p> coupler history snapshot option. see stop_option above. default="never". set by
+                                        HIST_OPTION in env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_history_ymd"></a><code class="option">history_ymd (int)</code></dt>
+                                <dd>
+                                    <p> date associated with history_option date. yyyymmdd format. default=-1. set by
+                                        HIST_DATE in env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_histavg_n"></a><code class="option">histavg_n (int)</code></dt>
+                                <dd>
+                                    <p> number associated with histavg_option. default=-1. set by AVGHIST_N in
+                                        env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_histavg_option"></a><code class="option">histavg_option (char)</code>
+                                </dt>
+                                <dd>
+                                    <p> coupler time average history option. see stop_option above. defaults="never".
+                                        set by AVGHIST_OPTION in env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_histavg_ymd"></a><code class="option">histavg_ymd (int)</code></dt>
+                                <dd>
+                                    <p> date associated with histavg_option date. yyyymmdd format. default=-1. set by
+                                        AVGHIST_DATE in env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_ice_cpl_dt"></a><code class="option">ice_cpl_dt (int)</code></dt>
+                                <dd>
+                                    <p> ice coupling timestep in seconds. set via ICE_NCPL in env_run.xml. ICE_NCPL is
+                                        the number of times the ice is coupled per day.</p>
+                                </dd>
+                                <dt><a name="nmlv_ice_cpl_offset"></a><code class="option">ice_cpl_offset (int)</code>
+                                </dt>
+                                <dd>
+                                    <p> controls phasing of the coupling. offset in seconds. default=0.</p>
+                                </dd>
+                                <dt><a name="nmlv_lnd_cpl_dt"></a><code class="option">lnd_cpl_dt (int)</code></dt>
+                                <dd>
+                                    <p> lnd coupling timestep in seconds. set via LND_NCPL in env_run.xml. LND_NCPL is
+                                        the number of times the lnd is coupled per day.</p>
+                                </dd>
+                                <dt><a name="nmlv_lnd_cpl_offset"></a><code class="option">lnd_cpl_offset (int)</code>
+                                </dt>
+                                <dd>
+                                    <p> controls phasing of the coupling. offset in seconds. default=0.</p>
+                                </dd>
+                                <dt><a name="nmlv_ocn_cpl_dt"></a><code class="option">ocn_cpl_dt (int)</code></dt>
+                                <dd>
+                                    <p> ocn coupling timestep in seconds. set via OCN_NCPL in env_run.xml. OCN_NCPL is
+                                        the number of times the ocn is coupled per day.</p>
+                                </dd>
+                                <dt><a name="nmlv_ocn_cpl_offset"></a><code class="option">ocn_cpl_offset (int)</code>
+                                </dt>
+                                <dd>
+                                    <p> controls phasing of the coupling. offset in seconds. default=0.</p>
+                                </dd>
+                                <dt><a name="nmlv_ref_tod"></a><code class="option">ref_tod (int)</code></dt>
+                                <dd>
+                                    <p> reference start time of day in seconds. overwritten if restart file is read. if
+                                        unset, will use start_tod. default=0</p>
+                                </dd>
+                                <dt><a name="nmlv_ref_ymd"></a><code class="option">ref_ymd (int)</code></dt>
+                                <dd>
+                                    <p> reference start date. overwritten if restart file is read. format yyyymmdd. if
+                                        unset, will use start_ymd. default=0</p>
+                                </dd>
+                                <dt><a name="nmlv_restart_n"></a><code class="option">restart_n (int)</code></dt>
+                                <dd>
+                                    <p> number associated with restart_option. default=-1. set by REST_N in env_run.xml
+                                    </p>
+                                </dd>
+                                <dt><a name="nmlv_restart_option"></a><code class="option">restart_option (char)</code>
+                                </dt>
+                                <dd>
+                                    <p> model restart option. all components write restarts using this setting. see
+                                        stop_option above. default="yearly". set by REST_OPTION in env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_restart_ymd"></a><code class="option">restart_ymd (int)</code></dt>
+                                <dd>
+                                    <p> date associated with stop_option date. yyyymmdd format. default=-1. set by
+                                        REST_DATE in env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_start_tod"></a><code class="option">start_tod (int)</code></dt>
+                                <dd>
+                                    <p> initial start time of day in seconds. overwritten if restart file is read.
+                                        default=0</p>
+                                </dd>
+                                <dt><a name="nmlv_start_ymd"></a><code class="option">start_ymd (int)</code></dt>
+                                <dd>
+                                    <p> initial start date. overwritten if restart file is read. format yyyymmdd.
+                                        default=0, must be set by user on initial runs.</p>
+                                </dd>
+                                <dt><a name="nmlv_stop_n"></a><code class="option">stop_n (int)</code></dt>
+                                <dd>
+                                    <p> number associated with stop_option. default=-1. set by STOP_N in env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_stop_option"></a><code class="option">stop_option (char)</code></dt>
+                                <dd>
+                                    <p> model stop option used in conjuction with stop_n, stop_ymd, and stop_tod.
+                                        [none,never,nsteps,nstep,nseconds,nsecond,nminutes,nminute,nhours,nhour,ndays,nday,nmonths,nmonth,nyears,nyear,date,ifdays0,end]
+                                        default="". set by STOP_OPTION in env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_stop_tod"></a><code class="option">stop_tod (int)</code></dt>
+                                <dd>
+                                    <p> time of day in seconds associated with stop_option and stop_ymd. default=0. </p>
+                                </dd>
+                                <dt><a name="nmlv_stop_ymd"></a><code class="option">stop_ymd (int)</code></dt>
+                                <dd>
+                                    <p> date associated with stop_option. model will stop when stop_option and stop_n OR
+                                        when stop_ymd and stop_tod is reached. yyyymmdd format. default=-1. set by
+                                        STOP_DATE in env_run.xml</p>
+                                </dd>
+                                <dt><a name="nmlv_tprof_n"></a><code class="option">tprof_n (int)</code></dt>
+                                <dd>
+                                    <p> number associated with tprof_option. default=-1. set by TPROF_N in env_run.xml.
+                                    </p>
+                                </dd>
+                                <dt><a name="nmlv_tprof_option"></a><code class="option">tprof_option (char)</code></dt>
+                                <dd>
+                                    <p> timer profiling option. see stop_option above. default="never". set by
+                                        TPROF_OPTION in env_run.xml.</p>
+                                </dd>
+                                <dt><a name="nmlv_tprof_ymd"></a><code class="option">tprof_ymd (int)</code></dt>
+                                <dd>
+                                    <p> date associated with tprof_option date. yyyymmdd format. default=-1. set by
+                                        TPROF_DATE in env_run.xml.</p>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
 
             </article>
